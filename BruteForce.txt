@@ -1,0 +1,46 @@
+Beatriz Manrique
+
+
+Brute Force explanation
+
+The brute force algorithm traverses through the entire array systematically.
+The first element is compared to the rest of the n-1 elements.
+The second element is compared to the rest of the above elements. 
+It will not be compared to the first element because that pair has already been calculated.
+The vector distance between flightOne and flightTwo is computed by taking the square root of the summation of the square of the difference between x and y positions.
+Distance = ((x2 - x1)^2 + (y2 - y1)^2)^(1/2)
+The distance for each comparison is compared to the smalles distance calculated thus far.
+If the current distance is smaller than the current minimum distance, the minimum distance is replaced.
+Both flightOne and flightTwo for the corresponding distance are set to be the only element in the closestPair array.
+After the flightData array has been traversed, the sole element in the closestPair array will hold the pair of planes closest to each other.
+
+
+Big-O runtime complexity
+    initialization: assignments and math only -> BigO(constant)
+    outer for loop from i = 1 to i = n-1;   **
+    inner for loop from j = i+1 to j = n;   ***
+        math and insertions -> BigO(constant)
+    output: console.log -> BigO(constant)
+
+** outer loop executes n-2 times because i = 0 was part of the initialization step, removing an element from the flightData array.
+    The last element of the array is n-1+1 but that is equal to j when i is n-1, so it is removed.
+    This leaves n-1-1=n-2.
+    Therefore the outer loop has a runtime complexity of n-2
+
+*** inner loop depends on i of outer loop.
+    It will always traverse one element less than the outer loop because j = i + 1.
+    If the outer loop has a runtime complexity of n-2 , then the inner loop must has a runtime complexity of n-3.
+
+initialization: assignments and math only -> BigO(constant)
+    outer for loop from i = 1 to i = n-1;   ** -> n-2
+    inner for loop from j = i+1 to j = n;   *** -> n-3
+        math and insertions -> BigO(constant)
+    output: console.log -> BigO(constant)
+
+Runtime Complexity = constant + (n-2)(n-3)(constant) + constant
+                    = constant(2 + n^2 -5n +6)
+                    = constant(8 + n^2 -5n)
+                    = constant(8) + constant(n^2) + constant(-5n)
+                    = BigO(n^2)
+
+Therefore the brute force algorithm has a runtime complexity of BigO(n^2).

@@ -1,0 +1,94 @@
+/** Beatriz Manrique
+ * CSE 3353
+ * Project 1: Protect the Planes
+ * February 19, 2018
+ */
+'use strict';
+
+// read from json file
+const fs = require('fs');
+fs.readFileSync('airline_map.json', (err, data) => {
+    if(err){
+        console.log(err); 
+        return;
+    }
+});
+const flightData = require('./airline_map.json');
+
+// variables used
+// empty array will hold the pair of closest flights and their individual data
+const closestData = [];
+// variable will hold x position of flight 1
+var x1 = 0
+// variable will hold x position of flight 2
+var x2 = 0;
+// variable will hold y position of flight 1
+var y1 = 0;
+// variable will hold y position of flight 2
+var y2 = 0;
+// variable will hold distance between two current flights
+var distance = 0;
+// variable will hold the smallest distance found so far
+var minDistance = 0;
+
+// bruteForce method
+function bruteForce(flightData){
+    initialize(flightData);
+    // run through rest of array comparing distances of every possible flight combination
+    for (var i =0; i < flightData.length -1; i++){
+        for (var j = i+1; j < flightData.length; j++)
+        {
+            x1 = flightData[i].x;
+            x2 = flightData[j].x;
+            y1 = flightData[i].y;
+            y2 = flightData[j].y;
+
+            distance = getDistance(x1, x2, y1, y2);
+            // will replace only element of closestPair array is distance is less than the current minDistance
+            if (distance < minDistance){
+                minDistance = distance;
+                closestData[0] = flightData[i];
+                closestData[1] = flightData[j];
+                closestData[2] = minDistance;
+            }
+        }
+    };
+    console.log(closestData);
+    // can do nicer output now
+    
+};
+
+// set variables to value
+// initial run so that distance and minDistance have comparable values
+function initialize(flightData){
+    x1 = flightData[0].x;
+    x2 = flightData[1].x;
+    y1 = flightData[0].y;
+    y2 = flightData[1].y;
+    distance = getDistance(x1, x2, y1, y2);
+    minDistance = distance;
+    /** var closestFlights = {
+        flightOne: flightData[0],
+        flightTwo: flightData[1],
+        distance: minDistance
+    }*/
+    // pushes the first two flights as closest pait
+    // will be replaced if a smaller distance is found later
+    // closestPair.push(closestFlights);
+    closestData.push(flightData[0]);
+    closestData.push(flightData[1]);
+    closestData.push(minDistance);
+    return;
+};
+
+// calculate distance between flights
+function getDistance(x1, x2, y1, y2){
+    var xVal = Math.pow((x2-x1),2);
+    var yVal = Math.pow((y2-y1),2);
+    var distance = Math.sqrt(xVal + yVal);
+    return distance;
+};
+
+// executes brute force algorithm
+bruteForce(flightData);
+console.log(closestData[0].x);
