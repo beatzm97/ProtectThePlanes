@@ -29,13 +29,13 @@ function recursiveSol(flightData){
     };
 
     sortY = sortFlights(flightData, 1);
-    //console.log(sortY[0].y);
+    //console.log(sortY);
     var small = recursive(sortY, sortY.length);   
     console.log(small);
 };
 
 function recursive(section, length){
-    if(section.length <= 3){
+    if(length <= 3){
         return bruteForce(section, length);
     };
 
@@ -45,8 +45,8 @@ function recursive(section, length){
     var mid = Math.floor(length/2);
     var midFlight = section[mid].y;
 
-    let left = section.slice(0, mid);
-    let right = section.slice(mid);
+    var left = section.slice(0, mid);
+    var right = section.slice(mid);
 
     //console.log(left);
     //console.log(right);
@@ -56,14 +56,19 @@ function recursive(section, length){
     var diff = findSmallest(diffLeft, diffRight);
     //console.log(diff);
 
-    var cross = [length];
+    //console.log("left " + diffLeft);
+    //console.log("right " + diffRight)
+    //console.log("diff  " + diff);
+    var cross = [];
     var j = 0;
     for (var i = 0; i < length; i++){
-        if(Math.abs(section[i].y - midFlight) < diff){
+        if((Math.abs(section[i].y) - Math.abs(midFlight)) < diff){
+            //console.log(section[i].y + " vs " + midFlight+ " = " + (Math.abs(section[i].y) - Math.abs(midFlight)));
             cross[j] = section[i];
             j++;
-        }
-    }
+        };
+    };
+    //console.log(cross);
 
     return findSmallest(diff, crossClose(cross, cross.length, diff));
 
@@ -89,15 +94,9 @@ function mergeMethod(left, right, code){
     var indexR = 0;
 
     var sort;
-    if (code === 0){
-        sort = 'x';
-    }
-    if (code === 1){
-        sort = 'y';
-    }
 
     while(indexL < left.length && indexR < right.length){
-        if(left[indexL].sort < right[indexR].sort){
+        if(left[indexL].y < right[indexR].y){
             result.push(left[indexL]);
             indexL++;
         }
@@ -118,7 +117,7 @@ function findSmallest(diffLeft, diffRight){
 
 function crossClose(cross, size, diff){
     var min = diff;
-    sortX = sortFlights(cross, 0);
+    //sortX = sortFlights(cross, 0);
 
     // variable will hold x position of flight 1
     var x1 = 0
@@ -131,14 +130,16 @@ function crossClose(cross, size, diff){
 
     var distance = 0;
 
-    for (var i = 0; i < size; i++){
-        for (var j = i+1; j < size && (sortX[j].x - sortX[i].x) < min; j++){
-            x1 = sortX[i].x;
-            x2 = sortX[j].x;
-            y1 = sortX[i].y;
-            y2 = sortX[j].y;
+    for (var i = 0; i < size - 1; i++){
+        for (var j = i+1; j < size && (cross[j].x - cross[i].x) < min; j++){
+            x1 = cross[i].x;
+            x2 = cross[j].x;
+            y1 = cross[i].y;
+            y2 = cross[j].y;
 
             distance = getDistance(x1, x2, y1, y2);
+            //console.log("x1: " + x1 + " x2: " + x2 + " y1: " + y1 + " y2: " + y2);
+            //console.log(distance);
             // will replace only element of closestPair array is distance is less than the current minDistance
             if (distance < min){
                 min = distance;
@@ -148,7 +149,7 @@ function crossClose(cross, size, diff){
             };
         };
     };
-    console.log(min);
+    //console.log("cross " + min);
     return min;
 };
 
@@ -173,7 +174,7 @@ function bruteForce(section, length){
 
     // run through rest of array comparing distances of every possible flight combination
     for (var i = 0; i < length - 1; i++){
-        for (var j = i+1; j < length; j++){
+        for (var j = i+1; j < length && (section[j].y - section[i].y) < minDistance; j++){
             x1 = section[i].x;
             x2 = section[j].x;
             y1 = section[i].y;

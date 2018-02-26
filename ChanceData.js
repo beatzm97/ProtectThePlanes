@@ -14,7 +14,7 @@
  // use chance
 var flightData = [];
 
- for (var i = 0; i < 100; i++){
+ for (var i = 0; i < 15; i++){
      var fNumber = (chance.string({length:2, pool:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'})) 
         + (chance.integer({min:0, max:9})) 
         + (chance.integer({min:0, max:9})) 
