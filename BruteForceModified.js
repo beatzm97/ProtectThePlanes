@@ -103,11 +103,35 @@ function getDistance(x1, x2, y1, y2){
     return distance;
 };
 
+function collisionRisk(closestData){
+    if (closestData[2] === 0){
+        return "Flight One and Flight Two will collide.";
+    }
+    if (closestData[1].x > closestData[0].x){
+        if (((closestData[0].heading <= 90 && closestData[0].heading >= 0) || closestData[0].heading === 360) && (closestData[1].heading === 0 || (closestData[1].heading <= 360 && closestData[1].heading >= 270))){
+            return "Flight One and Flight Two will collide.";
+        }
+        else if (closestData[0].heading <= 180 && closestData[0].heading >= 90 && closestData[1].heading <= 270 && closestData[1].heading >= 180){
+            return "Flight One and Flight Two will collide.";
+        }
+    }
+    if (closestData[1].x < closestData[0].x){
+        if (((closestData[0].heading <= 360 && closestData[0].heading >= 270) || closestData[0].heading === 0) && (closestData[1].heading === 360 || (closestData[1].heading <= 90 && closestData[1].heading >= 0))){
+            return "Flight One and Flight Two will collide.";
+        }
+        else if (closestData[0].heading <= 270 && closestData[0].heading >= 180 && closestData[1].heading <= 180 && closestData[1].heading >= 90){
+            return "Flight One and Flight Two will collide.";
+        }
+    }
+    return "Flight One and Flight Two will not collide.";
+}
+
 // Structures result in a cleaner, nicer way to read
 function finalResult(closestData){
-    console.log("Flight One: " + closestData[0].flightNumber + " is located at X:" + closestData[0].x + ", Y:" + closestData[0].y +".");
-    console.log("Flight Two: " + closestData[1].flightNumber + " is located at X:" + closestData[1].x + ", Y:" + closestData[1].y +".");
+    console.log("Flight One: " + closestData[0].flightNumber + " is located at X:" + closestData[0].x + ", Y:" + closestData[0].y + ", Heading: " + closestData[0].heading + "°.");
+    console.log("Flight Two: " + closestData[1].flightNumber + " is located at X:" + closestData[1].x + ", Y:" + closestData[1].y + ", Heading: " + closestData[1].heading + "°.");
     console.log("Distance between flights: " + closestData[2]);
+    console.log(collisionRisk(closestData));
 };
 
 // executes brute force algorithm

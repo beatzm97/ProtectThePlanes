@@ -1,0 +1,34 @@
+Beatriz Manrique
+
+
+Recursive Solution explanation
+
+The recursive solution algorithm traverses through the entire array by dividing the problem into subproblems.
+First, the array is sorted so that the last element has the largest y value.
+The array of interest is then divided in half to form a left side and ride side.
+These subarrays are further divided until reaching a base case of 3 or less elements. 
+The base case is then run into the original brute force method but will only do up to 6 computations, so bigO(n).
+After achieving a value for the left and the right, we compare the min distance found on both sides and keep the smallest.
+
+We must account for the situation where a pair of points are not on the same side.
+To avoid going through the entire array, we create a new array with differences in y coordinates less than the current minimum distance.
+This array is then divided into subproblems until reaching the base case where brute force is run.
+Finally, we acheive a smallest value crossing both the left and right subarrays.
+The resulting value is compared to the previous min distance found from the left and right subarrays.
+The smallest is kept and is the smallest distance between the closest pairs.
+
+Big-O runtime complexity
+    sorting by merge sort -> BigO(n log n)
+    initialization: assignments and math only -> BigO(constant)
+    recursive function
+        base case evaluation -> BigO(n log n)
+        recursive left -> BigO(log n)
+        recursive right -> BigO(log n)
+        compare left and right -> BigO(constant)
+        recursive cross -> BigO(log n)
+        compare cross with min -> BigO(costant)
+    collision risk -> comparisons -> BigO(constant)
+    output: console.log -> BigO(constant)
+
+Runtime Complexity = 4(n log n)
+Therefore the brute force algorithm has a runtime complexity of BigO(n log n).

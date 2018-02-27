@@ -14,7 +14,7 @@
  // use chance
 var flightData = [];
 
- for (var i = 0; i < 15; i++){
+ for (var i = 0; i < 25000; i++){
      var fNumber = (chance.string({length:2, pool:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'})) 
         + (chance.integer({min:0, max:9})) 
         + (chance.integer({min:0, max:9})) 
@@ -22,11 +22,13 @@ var flightData = [];
         + (chance.integer({min:0, max:9}));
      var xPos = chance.floating({min:-10, max:10});
      var yPos = chance.floating({min:-10, max: 10});
+     var dir = chance.floating({min:0, max:360});
 
      var singleFlight = {
         flightNumber: fNumber,
         x: xPos,
-        y: yPos
+        y: yPos,
+        heading: dir
     };
      flightData.push(singleFlight);
  }

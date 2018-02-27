@@ -1,21 +1,25 @@
 Beatriz Manrique
 
 
-Brute Force explanation
+Brute Force Modified explanation
 
-The brute force algorithm traverses through the entire array systematically.
+The brute force modification algorithm traverses through the entire array systematically.
+First, the array is sorted so that the last element has the largest y value.
 The first element is compared to the rest of the n-1 elements.
 The second element is compared to the rest of the above elements. 
 It will not be compared to the first element because that pair has already been calculated.
 The vector distance between flightOne and flightTwo is computed by taking the square root of the summation of the square of the difference between x and y positions.
 Distance = ((x2 - x1)^2 + (y2 - y1)^2)^(1/2)
 The distance for each comparison is compared to the smallest distance calculated thus far.
-If the current distance is smaller than the current minimum distance, the minimum distance is replaced.
+If the current y coordinate difference is not smaller than the current minimum distance, the distance for those points is not calculated.
+This modification is seen in the inner for loop.
+Otherwise, the distance is calculated and possibly updated.
 Both flightOne and flightTwo for the corresponding distance are set to be the only element in the closestPair array.
 After the flightData array has been traversed, the sole element in the closestPair array will hold the pair of planes closest to each other.
 
 
 Big-O runtime complexity
+    sorting by merge sort -> BigO(n log n)
     initialization: assignments and math only -> BigO(constant)
     outer for loop from i = 0 to i = n-1;   **
     inner for loop from j = i+1 to j = n;   ***
@@ -24,11 +28,12 @@ Big-O runtime complexity
     output: console.log -> BigO(constant)
 
 ** outer loop executes n times 
-    Therefore the outer loop has a runtime complexity of n
+    Therefore the outer loop has a runtime complexity of worst case n
 
 *** inner loop depends on i of outer loop.
-    The inner loop has a runtime complexity of n-1.
+    The inner loop has a runtime complexity of worst case n-1.
 
+sorting by merge sort -> BigO(n log n)
 initialization: assignments and math only -> BigO(constant)
     outer for loop from i = 1 to i = n-1;   ** -> n
     inner for loop from j = i+1 to j = n;   *** -> n-1

@@ -17,8 +17,12 @@ const flightData = require('./airline_map.json');
 
 // empty array will hold the pair of closest flights and their individual data
 const closestData = [];
+const diffClose = [];
+const leftClose = [0, 0, 30];
+const rightClose = [0, 0, 30];
+const crossClose = [];
+
 // sorted version of flightData array
-var sortX = [];
 var sortY = [];
 
 // recursive solution
@@ -30,48 +34,44 @@ function recursiveSol(flightData){
 
     sortY = sortFlights(flightData, 1);
     //console.log(sortY);
-    var small = recursive(sortY, sortY.length);   
+    var small = recursive(sortY, sortY.length, 'last');   
     console.log(small);
+    //console.log(leftClose);
+    //console.log(rightClose);
+    //console.log(diffClose);
+    //console.log(crossClose);
+    //console.log(closestData);
 };
 
-function recursive(section, length){
+function recursive(section, length, mode){
+    //console.log("Mode: " + mode);
     if(length <= 3){
-        return bruteForce(section, length);
+        return bruteForce(section, length, mode);
     };
 
-    //console.log(section);
-    
-    //console.log(section[3].y);
     var mid = Math.floor(length/2);
     var midFlight = section[mid].y;
 
     var left = section.slice(0, mid);
     var right = section.slice(mid);
 
-    //console.log(left);
-    //console.log(right);
-    var diffLeft = recursive(left, left.length);
-    var diffRight = recursive(right, right.length);
+    //console.log("FIRST recursive call Mode: " + mode);
+    var diffLeft = recursive(left, left.length, 'l');
+    //console.log("SECOND recursive call Mode: " + mode);
+    var diffRight = recursive(right, right.length, 'r');
 
-    var diff = findSmallest(diffLeft, diffRight);
-    //console.log(diff);
+    var diff = findSmallest(diffLeft, diffRight, mode);
 
-    //console.log("left " + diffLeft);
-    //console.log("right " + diffRight)
-    //console.log("diff  " + diff);
     var cross = [];
     var j = 0;
     for (var i = 0; i < length; i++){
         if((Math.abs(section[i].y) - Math.abs(midFlight)) < diff){
-            //console.log(section[i].y + " vs " + midFlight+ " = " + (Math.abs(section[i].y) - Math.abs(midFlight)));
             cross[j] = section[i];
             j++;
         };
     };
-    //console.log(cross);
 
-    return findSmallest(diff, crossClose(cross, cross.length, diff));
-
+    return findSmallestFin(diff, crossFind(cross, cross.length, diff, mode), mode);
 };
 
 // sort flightData array
@@ -108,16 +108,35 @@ function mergeMethod(left, right, code){
     return result.concat(left.slice(indexL)).concat(right.slice(indexR));
 };
 
-function findSmallest(diffLeft, diffRight){
+function findSmallest(diffLeft, diffRight, mode){
     if(diffLeft < diffRight){
+        diffClose[0] = leftClose[0];
+        diffClose[1] = leftClose[1];
+        diffClose[2] = leftClose[2];
         return diffLeft;
     }
+    diffClose[0] = rightClose[0];
+    diffClose[1] = rightClose[1];
+    diffClose[2] = rightClose[2];
     return diffRight;
 };
 
-function crossClose(cross, size, diff){
+function findSmallestFin(diffMin, crossMin, mode){
+    if(diffMin < crossMin){
+        closestData[0] = diffClose[0];
+        closestData[1] = diffClose[1];
+        closestData[2] = diffClose[2];
+        return diffMin;
+    }
+    closestData[0] = crossClose[0];
+    closestData[1] = crossClose[1];
+    closestData[2] = crossClose[2];
+    return crossMin;
+ };
+
+function crossFind(cross, size, diff, mode){
     var min = diff;
-    //sortX = sortFlights(cross, 0);
+    //console.log(diff);
 
     // variable will hold x position of flight 1
     var x1 = 0
@@ -138,22 +157,20 @@ function crossClose(cross, size, diff){
             y2 = cross[j].y;
 
             distance = getDistance(x1, x2, y1, y2);
-            //console.log("x1: " + x1 + " x2: " + x2 + " y1: " + y1 + " y2: " + y2);
-            //console.log(distance);
             // will replace only element of closestPair array is distance is less than the current minDistance
             if (distance < min){
                 min = distance;
-                //closestData[0] = smallSect[i];
-                //closestData[1] = smallSect[j];
-                //closestData[2] = min;
+                crossClose[0] = cross[i];
+                crossClose[1] = cross[j];
+                crossClose[2] = min;
             };
         };
     };
-    //console.log("cross " + min);
     return min;
 };
 
-function bruteForce(section, length){
+function bruteForce(section, length, mode){
+    //console.log("BruteForce Mode: " + mode);
     if(section.length === 1){
         console.log("Cannot find closest flight with only one flight.");
         return;
@@ -184,9 +201,16 @@ function bruteForce(section, length){
             // will replace only element of closestPair array is distance is less than the current minDistance
             if (distance < minDistance){
                 minDistance = distance;
-                //closestData[0] = section[i];
-                //closestData[1] = section[j];
-                //closestData[2] = minDistance;
+                if (mode === 'l'){
+                    leftClose[0] = section[i];
+                    leftClose[1] = section[j];
+                    leftClose[2] = minDistance;
+                }
+                if (mode === 'r'){
+                    rightClose[0] = section[i];
+                    rightClose[1] = section[j];
+                    rightClose[2] = minDistance;
+                }
             }
         };
     };
